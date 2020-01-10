@@ -1,7 +1,7 @@
 Summary: Pluggable password quality-control module
 Name: pam_passwdqc
 Version: 1.0.5
-Release: 6%{?dist}
+Release: 8%{?dist}
 # License of man page is BSD, rest is Copyright only
 License: BSD and Copyright only
 Group: System Environment/Base
@@ -11,7 +11,8 @@ Source1: ftp://ftp.openwall.com/pub/projects/pam/modules/%name/%name-%version.ta
 BuildRequires: pam-devel
 BuildRoot: %{_tmppath}/%name-%version
 
-Patch1: patch-219201.patch 
+Patch1: patch-219201.patch
+Patch2: password-algorithm-889545.patch
 
 %description
 pam_passwdqc is a simple password strength checking module for
@@ -24,6 +25,7 @@ and can be (re-)configured without rebuilding.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
 
 %build
 make CFLAGS="-Wall -fPIC -DHAVE_SHADOW -DLINUX_PAM $RPM_OPT_FLAGS" LDFLAGS_LINUX='--shared -Wl,--version-script,$(MAP)'
@@ -42,6 +44,12 @@ make install DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir} SECUREDIR=/%{_lib}/securi
 %{_mandir}/man*/*
 
 %changelog
+* Thu Feb 19 2015 Avesh Agarwal <avagarwa@redhat.com> - 1.0.5-8
+Resolves: #889545 Bumping to tag it as fast track candidate.
+
+* Thu Feb 19 2015 Avesh Agarwal <avagarwa@redhat.com> - 1.0.5-7
+Resolves: #889545
+
 * Tue Apr 20 2010 Avesh Agarwal <avagarwa@redhat.com> - 1.0.5-6
 - Added explanation of new options, disable_firstupper_lastdigit_check,
   oldpass_prompt_file, and newpass_prompt_file in the man pages
